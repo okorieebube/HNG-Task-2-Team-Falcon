@@ -67,7 +67,12 @@
 				// echo $fileName;
 				if ($runtime) {
 					# Execute script and assign result and redirect some input into it to prevent files waiting for user input 
-					$output = shell_exec("$runtime $filePath 2>&1 << input.txt");
+					$output;
+					try {
+						$output = shell_exec("$runtime $filePath 2>&1 << input.txt");
+					} catch(Exception $e) {
+						$output = null;
+					}
 
 					if (is_null($output)) {
 
@@ -172,7 +177,12 @@
 
 							// echo $fileName;
 							if ($runtime) {
-								$output = shell_exec("$runtime $filePath 2>&1 << input.txt"); # Execute script and assign result
+								$output = null;
+								try {
+									$output = shell_exec("$runtime $filePath 2>&1 << input.txt"); # Execute script and assign result
+								} catch(Exception $e) {
+									$output = null;
+								}
 								if (is_null($output)) {
 
 									$item["status"] = "fail";
