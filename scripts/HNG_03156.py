@@ -1,4 +1,4 @@
-full_name = "Fatima - Bint Ibrahim"
+full_name = "Fatima Bint Ibrahim"
 ID = "HNG-03156"
 language = "Python"
 email = "fatimatib44@gmail.com"
