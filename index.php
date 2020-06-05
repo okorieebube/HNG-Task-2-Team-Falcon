@@ -107,7 +107,7 @@
 						$item["email"] = trim($emailMatches[0]);
 					} else {
 						$item["status"] = "fail";
-						$item["output"] = item["output"]." [no email]";
+						$item["output"] = $item["output"]." [no email]";
 					}
 
 					// fileName
