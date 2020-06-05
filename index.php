@@ -3,7 +3,7 @@
 	$idRegex = "/(HNG[-{0,}][\d]+)/";
 	$emailRegex = "/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/i";
 	$languageRegex = "/using \[{0,1}(\w+[^\s]+)/i";
-	$nameRegex = "/this is \[{0,1}([\w+,\s]+)]{0,1} with/i";
+	$nameRegex = "/this is \[{0,1}([\w+,\s?-]+)]{0,1} with/i";
 
 	$supported_json = '{
 		"py": "python",
