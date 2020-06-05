@@ -113,7 +113,7 @@
 					$item["fileName"] = $fileName;
 				} else {
 					$item["name"] = $fileName;
-					$item["output"] = "File type not supported";
+					$item["output"] = "%> File type not supported";
 					$item["status"] = "fail";
 				}
 
@@ -219,7 +219,7 @@
 								$item["fileName"] = $fileName;
 							} else {
 								$item["name"] = $fileName;
-								$item["output"] = "File type not supported";
+								$item["output"] = "%> File type not supported";
 								$item["status"] = "fail";
 							}
 
