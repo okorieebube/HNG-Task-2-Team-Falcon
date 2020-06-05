@@ -183,7 +183,7 @@
 										$item["output"] = $matches[0];
 									} else {
 										$item["status"] = "fail";
-										$item["output"] = substr($output, 0, 200);
+										$item["output"] = "%> ".substr($output, 0, 200);
 									}
 
 								}
