@@ -194,7 +194,7 @@
 
 							$name = $item["name"];
 							$response = htmlspecialchars($item["output"]);
-							$status = $item["status"];
+							$status = strtoupper($item["status"]);
 
 							$failed = $item["status"] == "fail";
 							$class = $failed ? "text-danger" : "'text-success'";
