@@ -62,64 +62,55 @@
 
 				// echo $fileName;
 				if ($runtime) {
+					$output = shell_exec("$runtime $filePath 2>&1 << input.txt"); # Execute script and assign result
+					if (is_null($output)) {
 
-					$output = null;
-					try {
-						$output = shell_exec("$runtime $filePath 2>&1"); # Execute script and assign result
-						if (is_null($output)) {
-
-							$item["status"] = "fail";
-							$item["output"] = "%> script produced no output";
-							$item["name"] = $fileName;
-
-						} else {
-
-							if (preg_match($template, $output, $matches)) {
-								$item["status"] = "pass";
-								$item["output"] = $matches[0];
-							} else {
-								$item["status"] = "fail";
-								$item["output"] = $output;
-							}
-
-						}
-						// extract id
-						preg_match($idRegex, $output, $idMatches);
-						if (isset($idMatches[0])) {
-							$item["id"] = $idMatches[0];
-						}
-
-						// extract name 
-						preg_match($nameRegex, $output, $nameMatches);
-						if (isset($nameMatches[1])) {
-							$item["name"] = $nameMatches[1];
-						} else {
-							$item["name"] = $fileName;
-						}
-
-						// extract language
-						preg_match($languageRegex, $output, $languageMatches);
-						if (isset($languageMatches[1])) {
-							$item["language"] = $languageMatches[1];
-						}
-
-						// extract email
-						preg_match($emailRegex, $output, $emailMatches);
-						if (isset($emailMatches[0])) {
-							$item["email"] = trim($emailMatches[0]);
-						} else {
-							$item["status"] = "fail";
-						}
-
-						// fileName
-						$item["fileName"] = $fileName;
-
-					} catch(Exception $e) {
+						$item["status"] = "fail";
+						$item["output"] = "%> script produced no output";
 						$item["name"] = $fileName;
-						$item["output"] = $e->getMessage();
+
+					} else {
+
+						if (preg_match($template, $output, $matches)) {
+							$item["status"] = "pass";
+							$item["output"] = $matches[0];
+						} else {
+							$item["status"] = "fail";
+							$item["output"] = $output;
+						}
+
+					}
+					// extract id
+					preg_match($idRegex, $output, $idMatches);
+					if (isset($idMatches[0])) {
+						$item["id"] = trim($idMatches[0]);
+					}
+
+					// extract name 
+					preg_match($nameRegex, $output, $nameMatches);
+					if (isset($nameMatches[1])) {
+						$item["name"] = trim($nameMatches[1]);	
+	
+					} else {
+						$item["name"] = $fileName;
+					}
+
+					// extract language
+					preg_match($languageRegex, $output, $languageMatches);
+					if (isset($languageMatches[1])) {
+						$item["language"] = $languageMatches[1];
+					}
+
+					// extract email
+					preg_match($emailRegex, $output, $emailMatches);
+					if (isset($emailMatches[0])) {
+						$item["email"] = trim($emailMatches[0]);
+					} else {
 						$item["status"] = "fail";
 					}
 
+					// fileName
+					$item["fileName"] = $fileName;
 				} else {
 					$item["name"] = $fileName;
 					$item["output"] = "File type not supported";
@@ -178,62 +169,54 @@
 
 							// echo $fileName;
 							if ($runtime) {
-								$output = null;
-								try {
-									$output = shell_exec("$runtime $filePath 2>&1"); # Execute script and assign result
-									if (is_null($output)) {
+								$output = shell_exec("$runtime $filePath 2>&1 << input.txt"); # Execute script and assign result
+								if (is_null($output)) {
 
-										$item["status"] = "fail";
-										$item["output"] = "%> script produced no output";
-										$item["name"] = $fileName;
-
-									} else {
-
-										if (preg_match($template, $output, $matches)) {
-											$item["status"] = "pass";
-											$item["output"] = $matches[0];
-										} else {
-											$item["status"] = "fail";
-											$item["output"] = substr($output, 0, 200);
-										}
-
-									}
-									// extract id
-									preg_match($idRegex, $output, $idMatches);
-									if (isset($idMatches[0])) {
-										$item["id"] = $idMatches[0];
-									}
-
-									// extract name 
-									preg_match($nameRegex, $output, $nameMatches);
-									if (isset($nameMatches[1])) {
-										$item["name"] = $nameMatches[1];
-									} else {
-										$item["name"] = $fileName;
-									}
-
-									// extract language
-									preg_match($languageRegex, $output, $languageMatches);
-									if (isset($languageMatches[1])) {
-										$item["language"] = $languageMatches[1];
-									}
-
-									// extract email
-									preg_match($emailRegex, $output, $emailMatches);
-									if (isset($emailMatches[0])) {
-										$item["email"] = $emailMatches[0];
-									} else {
-										$item["status"] = "fail";
-									}
-
-									// fileName
-									$item["fileName"] = $fileName;
-
-								} catch(Exeception $e) {
 									$item["status"] = "fail";
-									$item["output"] = $e->getMessage();
+									$item["output"] = "%> script produced no output";
+									$item["name"] = $fileName;
+
+								} else {
+
+									if (preg_match($template, $output, $matches)) {
+										$item["status"] = "pass";
+										$item["output"] = $matches[0];
+									} else {
+										$item["status"] = "fail";
+										$item["output"] = substr($output, 0, 200);
+									}
+
+								}
+								// extract id
+								preg_match($idRegex, $output, $idMatches);
+								if (isset($idMatches[0])) {
+									$item["id"] = $idMatches[0];
+								}
+
+								// extract name 
+								preg_match($nameRegex, $output, $nameMatches);
+								if (isset($nameMatches[1])) {
+									$item["name"] = $nameMatches[1];
+								} else {
 									$item["name"] = $fileName;
 								}
+
+								// extract language
+								preg_match($languageRegex, $output, $languageMatches);
+								if (isset($languageMatches[1])) {
+									$item["language"] = $languageMatches[1];
+								}
+
+								// extract email
+								preg_match($emailRegex, $output, $emailMatches);
+								if (isset($emailMatches[0])) {
+									$item["email"] = $emailMatches[0];
+								} else {
+									$item["status"] = "fail";
+								}
+
+								// fileName
+								$item["fileName"] = $fileName;
 							} else {
 								$item["name"] = $fileName;
 								$item["output"] = "File type not supported";
@@ -264,7 +247,4 @@
 		</table>
 		</div>
 	</body>
-		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </html>
