@@ -1,9 +1,6 @@
 <?php
-	$template = "/^Hello World, this is [\w\-'\s]+ with HNGi7 ID HNG-\d{1,} using [\w*]+ for stage 2 task/";
-	$idRegex = "/(HNG[-{0,}][\d]+)/";
-	$emailRegex = "/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/i";
-	$languageRegex = "/using\s\[{0,1}(\w+[^\s]+)/i";
-	$nameRegex = "/this\sis\s\[{0,1}([\w\-'\s]+)]{0,1}\swith/i";
+
+	$template = "/^Hello World, this is ([\w'\-\s]+) with HNGi7 ID HNG-(\d{1,}) using ([\w*]+) for stage 2 task.\s([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/";
 
 	$supported_json = '{
 		"py": "python",
@@ -37,7 +34,10 @@
 	$path = "scripts";
 	$files = scandir($path);
 
-	$totalCount = count($files);
+	$counter = 0;
+	$totalCount = count($files) - 2;
+	$failCount = 0;
+	$passCount = 0;
 ?>
 
 <?php
@@ -74,44 +74,17 @@
 						if (preg_match($template, $output, $matches)) {
 							$item["status"] = "pass";
 							$item["output"] = $matches[0];
+							$item["name"] = $matches[1];
+							$item["id"] = $matches[2];
+							$item["language"] = $matches[3];
+							$item["email"] = $matches[4];
 						} else {
 							$item["status"] = "fail";
 							$item["output"] = $output;
+							$item["name"] = $fileName;
 						}
-
+						$item["fileName"] = $fileName;
 					}
-					// extract id
-					preg_match($idRegex, $output, $idMatches);
-					if (isset($idMatches[0])) {
-						$item["id"] = trim($idMatches[0]);
-					}
-
-					// extract name 
-					preg_match($nameRegex, $output, $nameMatches);
-					if (isset($nameMatches[1])) {
-						$item["name"] = trim($nameMatches[1]);	
-	
-					} else {
-						$item["name"] = $fileName;
-					}
-
-					// extract language
-					preg_match($languageRegex, $output, $languageMatches);
-					if (isset($languageMatches[1])) {
-						$item["language"] = $languageMatches[1];
-					}
-
-					// extract email
-					preg_match($emailRegex, $output, $emailMatches);
-					if (isset($emailMatches[0])) {
-						$item["email"] = trim($emailMatches[0]);
-					} else {
-						$item["status"] = "fail";
-						$item["output"] = $item["output"]." [no email]";
-					}
-
-					// fileName
-					$item["fileName"] = $fileName;
 				} else {
 					$item["name"] = $fileName;
 					$item["output"] = "%> File type not supported";
@@ -136,15 +109,32 @@
 			<div class=container>
 			<h1 class="text-center">Team Falcon</h1>
 			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+			<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 			<table class="table">
 				<thead>
 					<tr class="text-center">
 						<th scope="col">Submissions</th>
+						<th scope="col">Pass</th>
+						<th scope="col">Fail</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class="col-4 table-info text-center"><?php echo $totalCount; ?></td>
+						<td class="col-4 table-info text-center">
+							<span id="totalCount">
+								<?php echo $totalCount; ?>
+							</span>
+						</td>
+						<td class="col-4 table-success text-center">
+							<span id="passCount">
+								<?php echo $passCount; ?>
+							</span>
+						</td>
+						<td class="col-4 table-danger text-center">
+							<span id="failCount">
+								<?php echo $failCount; ?>
+							</span>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -182,68 +172,58 @@
 									if (preg_match($template, $output, $matches)) {
 										$item["status"] = "pass";
 										$item["output"] = $matches[0];
+										$item["name"] = $matches[1];
+										$item["id"] = $matches[2];
+										$item["language"] = $matches[3];
+										$item["email"] = $matches[4];
+										$passCount++;
 									} else {
 										$item["status"] = "fail";
 										$item["output"] = "%> ".substr($output, 0, 200);
+										$item["name"] = $fileName;
+										$failCount++;
 									}
-
+									$item["fileName"] = $fileName;
 								}
-								// extract id
-								preg_match($idRegex, $output, $idMatches);
-								if (isset($idMatches[0])) {
-									$item["id"] = $idMatches[0];
-								}
-
-								// extract name 
-								preg_match($nameRegex, $output, $nameMatches);
-								if (isset($nameMatches[1])) {
-									$item["name"] = $nameMatches[1];
-								} else {
-									$item["name"] = $fileName;
-								}
-
-								// extract language
-								preg_match($languageRegex, $output, $languageMatches);
-								if (isset($languageMatches[1])) {
-									$item["language"] = $languageMatches[1];
-								}
-
-								// extract email
-								preg_match($emailRegex, $output, $emailMatches);
-								if (isset($emailMatches[0])) {
-									$item["email"] = $emailMatches[0];
-								} else {
-									$item["status"] = "fail";
-									$ttem["output"] = $item["output"]." [no email]";
-								}
-
-								// fileName
-								$item["fileName"] = $fileName;
 							} else {
 								$item["name"] = $fileName;
 								$item["output"] = "%> File type not supported";
 								$item["status"] = "fail";
+								$failCount++;
 							}
 
-							echo getRow($item);
+							$name = $item["name"];
+							$response = htmlspecialchars($item["output"]);
+							$status = $item["status"];
+
+							$failed = $item["status"] == "fail";
+							$class = $failed ? "text-danger" : "'text-success'";
+							$code = $failed ? "text-danger" : "text-black";
+							$counter++;
+
+							echo <<<EOL
+								<tr>
+									<th scope=row>$counter</th>
+									<td class=$class>$name</td>
+									<td><samp class=$code>$response</samp></td>
+									<td class=$class>$status</td>
+								</tr>
+							EOL;
+
+							if ($failed) {
+								echo <<<EOL
+									<script>
+										$('#passCount').text($passCount);
+									</script>
+								EOL;
+							} else {
+								echo <<<EOL
+									<script>
+										$('#failCount').text($failCount);
+									</script>
+								EOL;
+							}
 						}
-					}
-
-					$counter = 0;
-					function getRow($item) {
-						global $counter;
-						$fail = $item["status"] == "fail";
-						$class = $fail ? "text-danger" : "'text-success'";
-						$code = $fail ? "class=text-danger" : "";
-						$counter++;
-
-						return "
-						<tr>"
-							."<th scope='row'>".$counter."</th>"
-							."<td class=".$class.">".$item["name"]."</td>"
-							."<td><samp ".$code.">".htmlspecialchars($item["output"])."</samp></td>"
-							."<td class=".$class.">".strtoupper($item["status"])."</td>"
-						."</tr>";
 					}
 				?>
 			</tbody>
