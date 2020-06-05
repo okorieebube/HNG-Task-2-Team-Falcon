@@ -232,13 +232,14 @@
 						global $counter;
 						$fail = $item["status"] == "fail";
 						$class = $fail ? "text-danger" : "'text-success'";
+						$code = $fail ? "class=text-danger" : "";
 						$counter++;
 
 						return "
 						<tr>"
 							."<th scope='row'>".$counter."</th>"
 							."<td class=".$class.">".$item["name"]."</td>"
-							."<td><samp>".htmlspecialchars($item["output"])."</samp></td>"
+							."<td><samp ".$code.">".htmlspecialchars($item["output"])."</samp></td>"
 							."<td class=".$class.">".strtoupper($item["status"])."</td>"
 						."</tr>";
 					}
