@@ -138,7 +138,7 @@
 			<table class="table">
 				<thead>
 					<tr class="text-center">
-						<th scope="col">Submitted</th>
+						<th scope="col">Submissions</th>
 					</tr>
 				</thead>
 				<tbody>
